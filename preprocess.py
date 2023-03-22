@@ -23,20 +23,17 @@ TEST_SIZE = params["split"]
 pathname = os.path.dirname(sys.argv[0])
 path = os.path.abspath(pathname)
 
-data_path = os.path.join(path, 'data', 'raw')
-train_path = os.path.join(path, 'data', 'train')
-validation_path = os.path.join(path, 'data', 'validation')
-if not os.path.exists(train_path):
-    os.makedirs(train_path)
-if not os.path.exists(validation_path):
-    os.makedirs(validation_path)
+input = sys.argv[1]
+prepared_data_path = os.path.join(path, 'data', 'prepared')
+if not os.path.exists(prepared_data_path):
+    os.makedirs(prepared_data_path)
 
     
-data = pd.read_csv(os.listdir(data_path)[0])
+data = pd.read_csv(input)
 
 train, val = split_data(data, TEST_SIZE, SEED)
 
 train, val = preprocess_data(train, val)
 
-train.to_csv(os.path.join(train_path, 'train.csv'))
-val.to_csv(os.path.join(validation_path, 'val.csv'))              
+train.to_csv(os.path.join(prepared_data_path, 'train.csv'))
+val.to_csv(os.path.join(prepared_data_path, 'val.csv'))              
