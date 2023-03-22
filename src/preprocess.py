@@ -5,8 +5,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 import yaml
 
-print('================================')
-
 def split_data(data, test_size, seed):
   train, val = train_test_split(data, test_size=test_size, random_state=seed)
   return train, val
@@ -38,7 +36,8 @@ train, val = split_data(data, TEST_SIZE, SEED)
 
 train, val = preprocess_data(train, val)
 
-print(train.shape, val.shape)
+print("Train set shape: ", train.shape)
+print("Validation set shape: ", val.shape)
 
 train.to_csv(os.path.join(prepared_data_path, 'train.csv'))
 val.to_csv(os.path.join(prepared_data_path, 'val.csv'))    
