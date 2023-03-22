@@ -8,7 +8,7 @@ import yaml
 
 params = yaml.safe_load(open("params.yaml"))["train"]
 C = params["C"]
-TARGET = None
+TARGET = "median_house_value"
 
 input = sys.argv[1]
 output = sys.argv[2]
