@@ -3,7 +3,6 @@ import sys
 import pickle
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import *
 import yaml
 
 
