@@ -5,41 +5,37 @@ import pickle
 import sys
 
 import pandas as pd
-from sklearn import metrics
-from sklearn import tree
-from dvclive import Live
-from matplotlib import pyplot as plt
+from sklearn.metrics import *
+#from dvclive import Live
+import matplotlib.pyplot as plt
 
 
-EVAL_PATH = "eval"
-
-
-if len(sys.argv) != 3:
-    sys.stderr.write("Arguments error. Usage:\n")
-    sys.stderr.write("\tpython evaluate.py model features\n")
-    sys.exit(1)
+#EVAL_PATH = "eval"
 
 model_file = sys.argv[1]
-train_file = os.path.join(sys.argv[2], "train.pkl")
-test_file = os.path.join(sys.argv[2], "test.pkl")
+train_file = os.path.join(sys.argv[2], "train.csv")
+test_file = os.path.join(sys.argv[2], "eval.csv")
+TARGET = "median_house_value"
 
-
-def evaluate(model, matrix, split, live):
-    """Dump all evaluation metrics and plots for given datasets."""
-    labels = matrix[:, 1].toarray().astype(int)
-    x = matrix[:, 2:]
-
+def evaluate(model, data, split):
+    FEATURES = [col for col in data.columns if col != TARGET]
+    X, y = data[FEATURES].values, data[TARGET].values
+    
+    print(f'{split} accuracy score = {accuracy_score(y, model.predict(X))}')
+    
+    '''
     predictions_by_class = model.predict_proba(x)
     predictions = predictions_by_class[:, 1]
 
     # Use dvclive to log a few simple metrics...
+    
     avg_prec = metrics.average_precision_score(labels, predictions)
     roc_auc = metrics.roc_auc_score(labels, predictions)
     if not live.summary:
         live.summary = {"avg_prec": {}, "roc_auc": {}}
     live.summary["avg_prec"][split] = avg_prec
     live.summary["roc_auc"][split] = roc_auc
-
+    
     # ... and plots...
     live.log_sklearn_plot("roc", labels, predictions, name=f"roc/{split}")
 
@@ -73,22 +69,23 @@ def evaluate(model, matrix, split, live):
                           predictions_by_class.argmax(-1),
                           name=f"cm/{split}"
                          )
-
+    '''
 
 # Load model and data.
 with open(model_file, "rb") as fd:
     model = pickle.load(fd)
 
 with open(train_file, "rb") as fd:
-    train, feature_names = pickle.load(fd)
+    train = pickle.load(fd)
 
 with open(test_file, "rb") as fd:
-    test, _ = pickle.load(fd)
+    test = pickle.load(fd)
 
 # Evaluate train and test datasets.
-live = Live(os.path.join(EVAL_PATH, "live"), dvcyaml=False)
-evaluate(model, train, "train", live)
-evaluate(model, test, "test", live)
+#live = Live(os.path.join(EVAL_PATH, "live"), dvcyaml=False)
+evaluate(model, train, "train")
+evaluate(model, test, "test")
+'''
 live.make_summary()
 
 # Dump feature importance image and show it with your plots.
@@ -99,3 +96,4 @@ forest_importances = pd.Series(importances, index=feature_names).nlargest(n=30)
 axes.set_ylabel("Mean decrease in impurity")
 forest_importances.plot.bar(ax=axes)
 fig.savefig(os.path.join(EVAL_PATH, "importance.png"))
+'''
