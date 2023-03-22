@@ -9,13 +9,17 @@ import yaml
 params = yaml.safe_load(open("params.yaml"))["train"]
 SEED = params["seed"]
 N_EST = params["n_est"]
-DEPTHS = params["depths"]
+MAX_DEPTH = params["max_depth"]
 TARGET = "median_house_value"
 
-input = sys.argv[1]
-output = sys.argv[2]
+input = os.path.join(sys.argv[1], 'train.csv') #####################
+output_path = sys.argv[2]
+output = os.path.join(output_path, 'model.pkl')
 
-X = pd.read_csv(input)
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
+
+X = pd.read_csv(input, index_col=0)
 FEATURES = [col for col in X.columns if col != TARGET]
 X_train, y_train = X[FEATURES].values, X[TARGET].values
 
@@ -25,7 +29,7 @@ def train(model, kwargs, X_train, y_train):
   return model
 
 model = RandomForestRegressor
-kwargs = {"n_estimators": N_EST, "depths": DEPTHS, "random_state": SEED}
+kwargs = {"n_estimators": N_EST, "max_depth": MAX_DEPTH, "random_state": SEED}
 model = train(model, kwargs, X_train, y_train)
 
 # save
