@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 model_file = sys.argv[1]
 train_file = os.path.join(sys.argv[2], "train.csv")
-test_file = os.path.join(sys.argv[2], "eval.csv")
+test_file = os.path.join(sys.argv[2], "val.csv")
 TARGET = "median_house_value"
 
 def evaluate(model, data, split):
@@ -71,11 +71,8 @@ def evaluate(model, data, split):
 with open(model_file, "rb") as fd:
     model = pickle.load(fd)
 
-with open(train_file, "rb") as fd:
-    train = pickle.load(fd)
-
-with open(test_file, "rb") as fd:
-    test = pickle.load(fd)
+train = pd.read_csv(train_file, index_col=0)
+test = pd.read_csv(test_file, index_col=0)
 
 # Evaluate train and test datasets.
 #live = Live(os.path.join(EVAL_PATH, "live"), dvcyaml=False)
