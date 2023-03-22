@@ -21,7 +21,7 @@ def evaluate(model, data, split):
     FEATURES = [col for col in data.columns if col != TARGET]
     X, y = data[FEATURES].values, data[TARGET].values
     
-    print(f'{split} accuracy score = {accuracy_score(y, model.predict(X))}')
+    print(f'{split} R2 score = {r2_score(y, model.predict(X))}')
     
     '''
     predictions_by_class = model.predict_proba(x)
