@@ -1,7 +1,0 @@
-dvclive>=2.0
-pandas
-pyaml
-scikit-learn
-scipy
-matplotlib
-tqdm>=4.41.0,<5
