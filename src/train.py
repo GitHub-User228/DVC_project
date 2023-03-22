@@ -2,12 +2,14 @@ import os
 import sys
 import pickle
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestRegressor
 import yaml
 
 
 params = yaml.safe_load(open("params.yaml"))["train"]
-C = params["C"]
+SEED = params["seed"]
+N_EST = params["n_est"]
+DEPTHS = params["depths"]
 TARGET = "median_house_value"
 
 input = sys.argv[1]
@@ -22,8 +24,8 @@ def train(model, kwargs, X_train, y_train):
   model.fit(X_train, y_train)
   return model
 
-model = LogisticRegression
-kwargs = {"C": C}
+model = RandomForestRegressor
+kwargs = {"n_estimators": N_EST, "depths": DEPTHS, "random_state": SEED}
 model = train(model, kwargs, X_train, y_train)
 
 # save
