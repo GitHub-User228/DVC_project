@@ -7,7 +7,7 @@ from sklearn.metrics import *
 import yaml
 
 
-params = yaml.safe_load(open("params.yaml"))["prepare"]
+params = yaml.safe_load(open("params.yaml"))["train"]
 C = params["C"]
 METRIC = params["metric"]
 TARGET = None
